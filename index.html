@@ -1,0 +1,1227 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RVDetail - Премиальный детейлинг в Махачкале</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        .hero {
+            position: relative;
+            height: 100vh;
+            overflow: hidden;
+        }
+
+        .hero-background {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+        }
+
+        .hero-background img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            filter: brightness(0.4);
+        }
+
+        .hero-content {
+            position: relative;
+            z-index: 1;
+            padding: 0 20px;
+            text-align: center;
+            color: white;
+        }
+        .services {
+            padding: 120px 80px;
+            background: var(--dark-gray);
+            min-height: 100vh; /* Добавлено для тестирования */
+        }
+
+        .services-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 40px;
+            margin-top: 60px;
+        }
+
+.hero-background img {
+    filter: brightness(1); /* 0-1 (0 - полностью черный, 1 - оригинал) */
+}
+
+/* Для изменения наложения цвета */
+.hero-background::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(45deg, rgba(10,10,10,0.9), rgba(255,215,0,0.1));
+}
+@media (max-width: 768px) {
+    .hero-background img {
+        object-position: 70% center; /* Сдвиг фокуса изображения */
+    }
+}
+
+        .service-card {
+            background: var(--black);
+            padding: 40px;
+            border-radius: 15px;
+            text-align: center;
+            opacity: 0;
+            transform: translateY(50px);
+            transition: 0.6s;
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+            min-height: 300px; /* Добавлено для стабильности */
+        }
+
+        /* Анимация появления */
+        .service-card.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        /* Base Styles */
+        :root {
+            --gold: #FFD700;
+            --black: #0A0A0A;
+            --dark-gray: #1A1A1A;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Montserrat', Arial, sans-serif;
+        }
+
+        body {
+            background: var(--black);
+            color: #FFF;
+            overflow-x: hidden;
+            scroll-behavior: smooth;
+        }
+
+        .section-title {
+            font-size: 3.5rem;
+            text-align: center;
+            margin-bottom: 70px;
+            position: relative;
+            opacity: 0;
+            transform: translateY(30px);
+            transition: 1s;
+        }
+
+        .section-title::after {
+            content: '';
+            position: absolute;
+            bottom: -15px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 100px;
+            height: 3px;
+            background: var(--gold);
+        }
+
+        .visible .section-title {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* Header Styles */
+        .header {
+            position: fixed;
+            width: 100%;
+            padding: 25px 80px;
+            background: rgba(10, 10, 10, 0.95);
+            z-index: 1000;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            transition: 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            backdrop-filter: blur(10px);
+        }
+
+        .header.scrolled {
+            padding: 15px 80px;
+            background: rgba(10, 10, 10, 0.98);
+        }
+
+        .logo {
+            font-size: 2.2rem;
+            color: var(--gold);
+            font-weight: 700;
+            letter-spacing: 3px;
+            text-transform: uppercase;
+            text-shadow: 0 0 15px rgba(255, 215, 0, 0.4);
+        }
+
+        .nav {
+            display: flex;
+            gap: 40px;
+        }
+
+        .nav a {
+            color: #FFF;
+            text-decoration: none;
+            font-size: 1.1rem;
+            font-weight: 500;
+            transition: 0.3s;
+            position: relative;
+        }
+
+        .nav a::after {
+            content: '';
+            position: absolute;
+            bottom: -5px;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: var(--gold);
+            transition: 0.3s;
+        }
+
+        .nav a:hover::after {
+            width: 100%;
+        }
+
+        .nav a:hover {
+            color: var(--gold);
+        }
+
+        .burger-menu {
+            display: none;
+            font-size: 1.8rem;
+            color: #FFF;
+            cursor: pointer;
+            z-index: 1001;
+        }
+
+        /* Hero Section */
+        .hero {
+            height: 100vh;
+            background: linear-gradient(45deg, rgba(10, 10, 10, 0.9), rgba(10, 10, 10, 0.7)),
+                        url('https://images.unsplash.com/photo-1621461133947-f63381b2b5f5') center/cover fixed;
+            display: flex;
+            align-items: center;
+            padding: 0 80px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(
+                90deg,
+                transparent,
+                rgba(255, 215, 0, 0.1),
+                transparent
+            );
+            animation: shine 6s infinite;
+        }
+
+        .hero-content {
+            max-width: 800px;
+            opacity: 0;
+            transform: translateY(50px);
+            animation: fadeUp 1s forwards 0.5s;
+        }
+
+        .hero h1 {
+            font-size: 4.5rem;
+            margin-bottom: 30px;
+            line-height: 1.2;
+        }
+
+        .hero p {
+            font-size: 1.3rem;
+            margin-bottom: 40px;
+            opacity: 0.9;
+        }
+
+        /* Services Section */
+        .services {
+            padding: 120px 80px;
+            background: var(--dark-gray);
+        }
+
+        .services-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 40px;
+            margin-top: 60px;
+        }
+
+        .service-card {
+            background: var(--black);
+            padding: 40px;
+            border-radius: 15px;
+            text-align: center;
+            opacity: 0;
+            transform: translateY(50px);
+            transition: 0.6s;
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .service-card:hover {
+            transform: translateY(-10px);
+        }
+
+        .service-card::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: linear-gradient(
+                45deg,
+                transparent,
+                rgba(255, 215, 0, 0.1),
+                transparent
+            );
+            transform: rotate(45deg);
+            pointer-events: none;
+        }
+
+        .service-card i {
+            font-size: 3.5rem;
+            color: var(--gold);
+            margin-bottom: 25px;
+        }
+
+        .service-card h3 {
+            font-size: 1.5rem;
+            margin-bottom: 15px;
+        }
+
+        /* Why Us Section */
+        .why-us {
+            padding: 120px 80px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .why-content {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 60px;
+            align-items: center;
+        }
+
+        .video-container {
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 0 30px rgba(0,0,0,0.3);
+            transform: rotate(3deg);
+            transition: 0.5s;
+        }
+
+        .video-container:hover {
+            transform: rotate(0);
+        }
+
+        .reasons-list {
+            list-style: none;
+        }
+
+        .reason-item {
+            margin-bottom: 30px;
+            padding: 25px;
+            background: var(--dark-gray);
+            border-radius: 10px;
+            opacity: 0;
+            transform: translateX(50px);
+            transition: 0.6s;
+        }
+
+        .reason-item:nth-child(even) {
+            transform: translateX(-50px);
+        }
+
+        .reason-number {
+            display: inline-block;
+            width: 35px;
+            height: 35px;
+            background: var(--gold);
+            color: var(--black);
+            text-align: center;
+            line-height: 35px;
+            border-radius: 50%;
+            margin-right: 15px;
+            font-weight: 700;
+        }
+
+        /* Gallery Section */
+        .gallery {
+            padding: 100px 80px;
+            background: var(--dark-gray);
+        }
+
+        .gallery-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 25px;
+            margin-top: 60px;
+        }
+
+        .gallery-item {
+            aspect-ratio: 1;
+            background-size: cover;
+            background-position: center;
+            border-radius: 10px;
+            overflow: hidden;
+            position: relative;
+            cursor: pointer;
+            transition: 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .gallery-item:hover {
+            transform: scale(1.05);
+            z-index: 100;
+        }
+
+        .gallery-item::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.4);
+            transition: 0.3s;
+        }
+
+        .gallery-item:hover::after {
+            background: rgba(0,0,0,0);
+        }
+
+        /* Reviews Section */
+        .reviews {
+            padding: 120px 80px;
+        }
+
+        .reviews-slider {
+            overflow: hidden;
+            position: relative;
+        }
+
+        .reviews-track {
+            display: grid;
+            grid-auto-flow: column;
+            gap: 40px;
+            transition: 0.5s;
+        }
+
+        .review-card {
+            background: var(--dark-gray);
+            padding: 40px;
+            border-radius: 15px;
+            min-width: 500px;
+        }
+
+        .review-author {
+            display: flex;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .review-photo {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            margin-right: 20px;
+        }
+
+        /* Contact Section */
+        .contact {
+            padding: 120px 80px;
+            background: var(--dark-gray);
+        }
+
+        .contact-form {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .form-group {
+            margin-bottom: 30px;
+        }
+
+        input, textarea {
+            width: 100%;
+            padding: 15px;
+            background: var(--black);
+            border: 2px solid rgba(255,255,255,0.1);
+            color: #FFF;
+            border-radius: 8px;
+            font-size: 1.1rem;
+            transition: 0.3s;
+        }
+
+        input:focus, textarea:focus {
+            border-color: var(--gold);
+            outline: none;
+        }
+
+        /* Footer */
+        .footer {
+            padding: 80px;
+            background: var(--black);
+            text-align: center;
+        }
+
+        .social-links {
+            display: flex;
+            justify-content: center;
+            gap: 30px;
+            margin: 40px 0;
+        }
+
+        .social-links a {
+            color: #FFF;
+            font-size: 1.5rem;
+            transition: 0.3s;
+        }
+
+        .social-links a:hover {
+            color: var(--gold);
+            transform: translateY(-5px);
+        }
+
+        /* Mobile Styles */
+        @media (max-width: 1200px) {
+            .header {
+                padding: 20px 40px;
+            }
+
+            .hero {
+                padding: 0 40px;
+            }
+
+            .services, .why-us, .gallery, .reviews, .contact {
+                padding: 80px 40px;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .header {
+                padding: 15px 20px;
+            }
+
+            .nav {
+                position: fixed;
+                top: 0;
+                right: -100%;
+                width: 250px;
+                height: 100vh;
+                background: var(--black);
+                flex-direction: column;
+                padding: 80px 30px;
+                transition: 0.5s;
+            }
+
+            .nav.active {
+                right: 0;
+            }
+
+            .burger-menu {
+                display: block;
+            }
+
+            .hero h1 {
+                font-size: 3rem;
+            }
+
+            .services-grid, .gallery-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .why-content {
+                grid-template-columns: 1fr;
+            }
+
+            .review-card {
+                min-width: 100%;
+            }
+
+            .gallery {
+                padding: 60px 20px;
+            }
+
+            .footer {
+                padding: 60px 20px;
+            }
+        }
+
+        /* Animations */
+        @keyframes fadeUp {
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes shine {
+            to {
+                left: 200%;
+            }
+        }
+
+        .btn-gold {
+            background: var(--gold);
+            color: var(--black);
+            padding: 18px 45px;
+            border: none;
+            border-radius: 30px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: 0.3s;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .btn-gold::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(
+                90deg,
+                transparent,
+                rgba(255,255,255,0.3),
+                transparent
+            );
+            transition: 0.5s;
+        }
+
+        .btn-gold:hover::before {
+            left: 100%;
+        }
+
+        .btn-gold:hover {
+            box-shadow: 0 0 30px rgba(255,215,0,0.4);
+        }
+        .services {
+      padding: 50px 80px; /* Добавить отступы */
+  }
+
+  .service-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); /* Адаптивная сетка */
+      grid-gap: 30px;
+  }
+
+  .service {
+      background-color: var(--dark-gray);
+      padding: 30px;
+      border-radius: 10px;
+      text-align: center;
+  }
+
+  .service i {
+      font-size: 3rem;
+      color: var(--gold);
+      margin-bottom: 15px;
+  }
+
+  .service h3 {
+      font-size: 1.8rem;
+      margin-bottom: 10px;
+  }
+
+  .service p {
+      font-size: 1.1rem;
+      line-height: 1.5;
+  }
+  .why-us {
+        padding: 120px 80px;
+        background: #0a0a0a;
+        position: relative;
+    }
+
+    .why-content {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 60px;
+        align-items: start;
+    }
+
+    .video-container {
+        position: relative;
+        border-radius: 15px;
+        overflow: hidden;
+        box-shadow: 0 0 30px rgba(255, 215, 0, 0.1);
+        transition: transform 0.5s;
+    }
+
+    .video-container iframe {
+        width: 100%;
+        height: 400px;
+        border: none;
+    }
+
+    .reasons-list {
+        list-style: none;
+        display: flex;
+        flex-direction: column;
+        gap: 25px;
+    }
+
+    .reason-item {
+        background: rgba(255, 215, 0, 0.05);
+        padding: 25px;
+        border-radius: 10px;
+        border-left: 4px solid var(--gold);
+        opacity: 0;
+        transform: translateX(50px);
+        transition: 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    .reason-item:nth-child(even) {
+        transform: translateX(-50px);
+    }
+
+    .reason-item.visible {
+        opacity: 1;
+        transform: translateX(0);
+    }
+
+    .reason-number {
+        background: var(--gold);
+        color: #000;
+        width: 35px;
+        height: 35px;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 50%;
+        font-weight: 700;
+        margin-right: 15px;
+    }
+
+    @media (max-width: 768px) {
+        .why-content {
+            grid-template-columns: 1fr;
+        }
+        
+        .video-container iframe {
+            height: 250px;
+        }
+    }
+    :root {
+    --gold: #FFD700;
+    --black: #0A0A0A;
+}
+.gallery {
+        padding: 100px 20px;
+        background: #000;
+    }
+
+    .gallery-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+        gap: 15px;
+        padding: 20px;
+    }
+
+    .gallery-item {
+        position: relative;
+        height: 300px;
+        border-radius: 8px;
+        overflow: hidden;
+        transition: transform 0.3s, box-shadow 0.3s;
+        cursor: pointer;
+    }
+
+    .gallery-item:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 10px 20px rgba(255,215,0,0.2);
+    }
+
+    .gallery-item::after {
+        content: "Посмотреть";
+        position: absolute;
+        bottom: -50px;
+        left: 0;
+        width: 100%;
+        text-align: center;
+        color: #fff;
+        background: rgba(0,0,0,0.7);
+        transition: 0.3s;
+        padding: 10px;
+    }
+
+    .gallery-item:hover::after {
+        bottom: 0;
+    }
+
+    /* Стили отзывов */
+    .reviews {
+        padding: 100px 20px;
+        background: #111;
+    }
+
+    .reviews-slider {
+        position: relative;
+        overflow: hidden;
+    }
+
+    .reviews-track {
+        display: flex;
+        transition: 0.5s;
+    }
+
+    .review-card {
+        min-width: 100%;
+        background: #1a1a1a;
+        padding: 30px;
+        border-radius: 10px;
+        margin: 0 15px;
+    }
+
+    .slider-controls {
+        position: absolute;
+        top: 50%;
+        width: 100%;
+        display: flex;
+        justify-content: space-between;
+        transform: translateY(-50%);
+    }
+
+    .prev-btn, .next-btn {
+        background: var(--gold);
+        border: none;
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        cursor: pointer;
+    }
+    .skeleton {
+    background: #2a2a2a;
+    background-image: linear-gradient(
+        90deg,
+        transparent 25%,
+        rgba(255,255,255,0.1) 50%,
+        transparent 75%
+    );
+    background-size: 200% 100%;
+    animation: loading 1.5s infinite;
+}
+@keyframes confetti {
+    0% { transform: translateY(-100vh) rotate(0deg); }
+    100% { transform: translateY(100vh) rotate(360deg); }
+}
+#booking {
+    transition: 0.5s;
+}
+
+#booking:target {
+    animation: highlight 1.5s ease;
+}
+
+@keyframes highlight {
+    0% { background: transparent; }
+    50% { background: rgba(255,215,0,0.1); }
+    100% { background: transparent; }
+}
+.service-notification {
+    position: fixed;
+    bottom: -100px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: var(--dark-gray);
+    padding: 15px 30px;
+    border-radius: 50px;
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+    transition: 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+    z-index: 10000;
+}
+
+.service-notification.show {
+    bottom: 30px;
+}
+    </style>
+</head>
+<body>
+    <header class="header">
+        <div class="logo">RVDetail</div>
+        <nav class="nav">
+            <a href="#home">Главная</a>
+            <a href="#services">Услуги</a>
+            <a href="#why-us">О нас</a>
+            <a href="#gallery">Галерея</a>
+            <a href="#reviews">Отзывы</a>
+            <a href="#contact">Контакты</a>
+        </nav>
+        <i class="fas fa-bars burger-menu"></i>
+    </header>
+
+    <section class="hero" id="home">
+        <div class="hero-background">
+            <!-- ЗАМЕНИТЕ ЭТОТ ПУТЬ НА СВОЁ ИЗОБРАЖЕНИЕ -->
+            <img src="img/depositphotos_351676566-stock-photo-professional-vehicle-body-polishing.jpg" alt="Фоновое изображение детейлинга">
+        </div>
+        
+        <div class="hero-content">
+            <h1>Экспертный детейлинг автомобилей премиум-класса</h1>
+            <p>Полный спектр услуг по восстановлению и защите кузова автомобиля</p>
+            <button class="btn-gold">Записаться онлайн</button>
+        </div>
+    </section>
+
+    <section class="services" id="services">
+        <div class="container">
+            <h2 class="section-title">Наши услуги</h2>
+            <div class="services-grid">
+                <!-- Полный набор из 6 карточек -->
+                <div class="service-card">
+                    <i class="fas fa-spray-can"></i>
+                    <h3>Полировка кузова</h3>
+                    <p>Полное восстановление лакокрасочного покрытия</p>
+                </div>
+                <div class="service-card">
+                    <i class="fas fa-car-side"></i>
+                    <h3>Керамическое покрытие</h3>
+                    <p>Защита и блеск кузова на более чем 3 года</p>
+                </div>
+                <div class="service-card">
+                    <i class="fas fa-tint"></i>
+                    <h3>Химчистка салона</h3>
+                    <p>Профессиональная  чистка салона от грязи и запахов</p>
+                </div>
+                <div class="service-card">
+                    <i class="fas fa-shield-alt"></i>
+                    <h3>Защита стекол</h3>
+                    <p>Премиальное гидрофобное покрытие</p>
+                </div>
+                <div class="service-card">
+                    <i class="fas fa-snowplow"></i>
+                    <h3>Подготовка к зиме</h3>
+                    <p>Антикоррозийная обработка</p>
+                </div>
+                <div class="service-card">
+                    <i class="fas fa-paint-roller"></i>
+                    <h3>Бронепленка</h3>
+                    <p>Защита от сколов и царапин</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="contact" id="booking">
+        <div class="container">
+            <h2 class="section-title">Онлайн запись</h2>
+            <form class="contact-form">
+                <input type="hidden" id="selected-service" name="service">
+                <div class="form-group">
+                    <input type="text" placeholder="Ваше имя" required>
+                </div>
+                <div class="form-group">
+                    <input type="tel" placeholder="Телефон" required>
+                </div>
+                <button type="submit" class="btn-gold">Записаться</button>
+            </form>
+        </div>
+    </section>
+
+    <section class="gallery" id="gallery">
+        <div class="container">
+            <h2 class="section-title">Наши работы</h2>
+            </div>
+            <div class="gallery-grid">
+                <div class="gallery-item" style="background-image: url('img/e62ef86s-960.jpg')"></div>
+                <div class="gallery-item" style="background-image: url('img/1.jpg')"></div>
+                <div class="gallery-item" style="background-image: url('img/3.jpg')"></div>
+                <div class="gallery-item" style="background-image: url('img/4.jpeg')"></div>
+                <div class="gallery-item" style="background-image: url('img/5.png')"></div>
+            </div>
+        </div>
+    </section>
+
+    <section class="reviews" id="reviews">
+        <div class="container">
+            <h2 class="section-title">Отзывы клиентов</h2>
+            <div class="reviews-slider">
+                <div class="reviews-track">
+                    <div class="review-card">
+                        <div class="review-author">
+                            <img src="img/dbdd1c362e48bc0c95531bbb1f516fb2.jpg" class="review-photo" alt="Али Магомедов">
+                            <div>
+                                <h3>Али Магомедов</h3>
+                                <p>Volkswagen Touareg</p>
+                            </div>
+                        </div>
+                        <p class="review-text">Отличный сервис! Машина как новая после детейлинга</p>
+                    </div>
+                    <div class="review-card">
+                        <div class="review-author">
+                            <img src="img/гамид.jpg" class="review-photo" alt="Али Магомедов">
+                            <div>
+                                <h3>Гамид Алиев</h3>
+                                <p>Lada priora</p>
+                            </div>
+                        </div>
+                        <p class="review-text">Бомбовый детейлинг, приха че за пушка стала</p>
+                    </div>
+                    <!-- Добавить 5 отзывов -->
+                </div>
+                <div class="slider-controls">
+                    <button class="prev-btn"><i class="fas fa-chevron-left"></i></button>
+                    <button class="next-btn"><i class="fas fa-chevron-right"></i></button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="why-us" id="why-us">
+        <div class="container">
+            <h2 class="section-title">Почему мы?</h2>
+            <div class="why-content">
+                <div class="video-container">
+                    <!-- Вставьте реальный ID YouTube-видео -->
+                    <iframe width="100%" height="315" 
+                        src="" 
+                        frameborder="0" 
+                        allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" 
+                        allowfullscreen>
+                    </iframe>
+                </div>
+                <ul class="reasons-list">
+                    <li class="reason-item">
+                        <span class="reason-number">1</span>
+                        <h3>Профессиональное оборудование</h3>
+                        <p>Используем только профессиональное оборудование Rupes и Menzerna</p>
+                    </li>
+                    <li class="reason-item">
+                        <span class="reason-number">2</span>
+                        <h3>Сертифицированные специалисты</h3>
+                        <p>Все мастера с международной сертификацией IDA</p>
+                    </li>
+                    <li class="reason-item">
+                        <span class="reason-number">3</span>
+                        <h3>Гарантия 2 года</h3>
+                        <p>Даем официальную гарантию на все виды работ</p>
+                    </li>
+                    <li class="reason-item">
+                        <span class="reason-number">4</span>
+                        <h3>Экологичные материалы</h3>
+                        <p>Используем только безопасные составы премиум-класса</p>
+                    </li>
+                    <li class="reason-item">
+                        <span class="reason-number">5</span>
+                        <h3>Удобное расположение</h3>
+                        <p>Центр города с парковкой и зоной ожидания</p>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </section>
+
+    <section class="contact" id="contact">
+        <div class="container">
+            <h2 class="section-title">Контакты</h2>
+            <form class="contact-form">
+                <div class="form-group">
+                    <input type="text" placeholder="Ваше имя" required>
+                </div>
+                <div class="form-group">
+                    <input type="tel" placeholder="Телефон" required>
+                </div>
+                <div class="form-group">
+                    <textarea placeholder="Сообщение" rows="5" required></textarea>
+                </div>
+                <button type="submit" class="btn-gold">Отправить</button>
+            </form>
+        </div>
+    </section>
+
+    <!-- Добавлены секции Gallery, Reviews, Contact -->
+
+    <footer class="footer">
+        <div class="container">
+            <div class="social-links">
+                <a href="#"><i class="fab fa-instagram"></i></a>
+                <a href="#"><i class="fab fa-whatsapp"></i></a>
+                <a href="#"><i class="fab fa-telegram"></i></a>
+            </div>
+            <p>Махачкала, ул. Промышленная 45</p>
+            <p>Ежедневно 9:00 - 21:00</p>
+        </div>
+    </footer>
+
+    <script>
+        // Исправленный JavaScript
+        document.addEventListener('DOMContentLoaded', () => {
+            // Header Scroll Effect
+            window.addEventListener('scroll', () => {
+                const header = document.querySelector('.header');
+                header.classList.toggle('scrolled', window.scrollY > 100);
+            });
+
+            // Intersection Observer
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if(entry.isIntersecting) {
+                        entry.target.classList.add('visible');
+                    }
+                });
+            }, { threshold: 0.1 });
+
+            document.querySelectorAll('.section-title, .service-card, .reason-item').forEach((el) => {
+                observer.observe(el);
+            });
+
+            // Mobile Menu
+            document.querySelector('.burger-menu').addEventListener('click', () => {
+                document.querySelector('.nav').classList.toggle('active');
+            });
+
+            // Smooth Scroll
+            document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+                anchor.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    const target = document.querySelector(this.getAttribute('href'));
+                    if(target) {
+                        target.scrollIntoView({
+                            behavior: 'smooth',
+                            block: 'start'
+                        });
+                    }
+                });
+            });
+
+            // Review Slider Fix
+            let currentReview = 0;
+            const track = document.querySelector('.reviews-track');
+            const reviews = document.querySelectorAll('.review-card');
+            
+            if(track && reviews.length > 0) {
+                setInterval(() => {
+                    currentReview = (currentReview + 1) % reviews.length;
+                    track.style.transform = `translateX(-${currentReview * 100}%)`;
+                }, 5000);
+            }
+
+            // Form Validation
+            document.querySelector('.contact-form').addEventListener('submit', (e) => {
+                e.preventDefault();
+                // Добавьте здесь обработку формы
+                alert('Форма отправлена! Мы свяжемся с вами в ближайшее время.');
+            });
+        });
+
+        document.addEventListener('DOMContentLoaded', () => {
+            // Обновленный Intersection Observer
+            const serviceObserver = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if(entry.isIntersecting) {
+                        entry.target.classList.add('visible');
+                    }
+                });
+            }, { 
+                threshold: 0.2,
+                rootMargin: '0px 0px -100px 0px'
+            });
+
+            // Наблюдаем за каждой карточкой отдельно
+            document.querySelectorAll('.service-card').forEach((el) => {
+                serviceObserver.observe(el);
+            });
+
+            // Закрытие меню при клике на ссылку
+            document.querySelectorAll('.nav a').forEach(link => {
+                link.addEventListener('click', () => {
+                    document.querySelector('.nav').classList.remove('active');
+                });
+            });
+        });
+        const reasonObserver = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if(entry.isIntersecting) {
+                entry.target.classList.add('visible');
+            }
+        });
+    }, { threshold: 0.2 });
+
+    document.querySelectorAll('.reason-item').forEach((el) => {
+        reasonObserver.observe(el);
+    });
+    let currentSlide = 0;
+    const track = document.querySelector('.reviews-track');
+    const slides = document.querySelectorAll('.review-card');
+    
+    function updateSlider() {
+        track.style.transform = `translateX(-${currentSlide * 100}%)`;
+    }
+
+    document.querySelector('.next-btn').addEventListener('click', () => {
+        currentSlide = (currentSlide + 1) % slides.length;
+        updateSlider();
+    });
+
+    document.querySelector('.prev-btn').addEventListener('click', () => {
+        currentSlide = (currentSlide - 1 + slides.length) % slides.length;
+        updateSlider();
+    });
+    document.querySelectorAll('.service-card').forEach(card => {
+            card.addEventListener('click', function() {
+                const serviceName = this.dataset.service;
+                
+                // Прокрутка к форме
+                document.getElementById('booking').scrollIntoView({
+                    behavior: 'smooth',
+                    block: 'start'
+                });
+
+                // Заполнение услуги
+                document.getElementById('selected-service').value = serviceName;
+                
+                // Показать уведомление
+                showServiceNotification(serviceName);
+            });
+        });
+
+        function showServiceNotification(serviceName) {
+            // ... код функции из предыдущего примера ...
+        }
+        function showServiceNotification(serviceName) {
+    const notification = document.createElement('div');
+    notification.className = 'service-notification';
+    notification.innerHTML = `
+        Выбрана услуга: <strong>${serviceName}</strong>
+        <i class="fas fa-check"></i>
+    `;
+    
+    document.body.appendChild(notification);
+    
+    setTimeout(() => {
+        notification.classList.add('show');
+    }, 100);
+    
+    setTimeout(() => {
+        notification.remove();
+    }, 3000);
+}
+    </script>
+</body>
+</html>
